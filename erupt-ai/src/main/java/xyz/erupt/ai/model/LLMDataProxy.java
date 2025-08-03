@@ -13,7 +13,7 @@ import xyz.erupt.annotation.sub_erupt.Tpl;
 import xyz.erupt.jpa.dao.EruptDao;
 import xyz.erupt.linq.lambda.LambdaSee;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

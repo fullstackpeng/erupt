@@ -9,8 +9,8 @@ import xyz.erupt.webscoket.channel.EruptChannelManager;
 import xyz.erupt.webscoket.channel.SocketCommand;
 import xyz.erupt.webscoket.model.EruptWsSessionModel;
 
-import javax.annotation.Resource;
-import javax.websocket.Session;
+import jakarta.annotation.Resource;
+import jakarta.websocket.Session;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
