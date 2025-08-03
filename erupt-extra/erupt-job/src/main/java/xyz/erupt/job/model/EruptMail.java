@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -23,6 +24,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+
+import java.sql.Types;
 import java.util.Date;
 
 /**
@@ -69,7 +72,7 @@ public class EruptMail extends BaseModel {
     private Boolean status;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "内容"),
             edit = @Edit(title = "内容", notNull = true, type = EditType.HTML_EDITOR)

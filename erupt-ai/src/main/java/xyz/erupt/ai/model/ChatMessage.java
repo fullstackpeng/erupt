@@ -3,6 +3,7 @@ package xyz.erupt.ai.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import xyz.erupt.ai.constants.ChatSenderType;
 import xyz.erupt.annotation.Erupt;
@@ -16,6 +17,8 @@ import xyz.erupt.jpa.model.BaseModel;
 import xyz.erupt.linq.lambda.LambdaSee;
 
 import jakarta.persistence.*;
+
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
@@ -49,7 +52,7 @@ public class ChatMessage extends BaseModel implements DataProxy<ChatMessage> {
             views = @View(title = "发送内容", type = ViewType.HTML)
     )
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     private String content;
 
     @EruptField(

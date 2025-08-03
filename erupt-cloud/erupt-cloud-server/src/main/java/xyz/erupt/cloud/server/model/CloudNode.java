@@ -3,6 +3,7 @@ package xyz.erupt.cloud.server.model;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 import xyz.erupt.annotation.Erupt;
@@ -25,6 +26,8 @@ import xyz.erupt.jpa.model.MetaModelUpdateVo;
 import xyz.erupt.upms.handler.ViaMenuValueCtrl;
 
 import jakarta.persistence.*;
+
+import java.sql.Types;
 
 /**
  * @author YuePeng
@@ -117,7 +120,7 @@ public class CloudNode extends MetaModelUpdateVo {
     private String duty;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "节点配置"),
             edit = @Edit(title = "节点配置", desc = "配置后可在子节点中读取", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "json"))

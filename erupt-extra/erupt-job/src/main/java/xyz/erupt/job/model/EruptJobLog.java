@@ -2,6 +2,7 @@ package xyz.erupt.job.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import xyz.erupt.annotation.Erupt;
 import xyz.erupt.annotation.EruptField;
@@ -22,6 +23,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+
+import java.sql.Types;
 import java.util.Date;
 
 /**
@@ -78,7 +81,7 @@ public class EruptJobLog extends BaseModel {
     private String resultInfo;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "错误信息", type = ViewType.HTML, sortable = true),
             edit = @Edit(title = "错误信息")

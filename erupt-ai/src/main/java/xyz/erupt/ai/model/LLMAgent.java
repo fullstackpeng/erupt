@@ -3,6 +3,7 @@ package xyz.erupt.ai.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import org.springframework.beans.BeanUtils;
 import xyz.erupt.ai.core.LlmConfig;
@@ -26,6 +27,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+
+import java.sql.Types;
 
 /**
  * @author YuePeng
@@ -59,7 +62,7 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
     private String promptHandler;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "智能体参数"),
             edit = @Edit(title = "智能体参数", type = EditType.CODE_EDITOR, notNull = true,
@@ -79,7 +82,7 @@ public class LLMAgent extends MetaModelUpdateVo implements DataProxy<LLMAgent> {
 
     @Lob
     @JsonIgnore
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "提示词"),
             edit = @Edit(title = "提示词", type = EditType.CODE_EDITOR, codeEditType = @CodeEditorType(language = "python"))

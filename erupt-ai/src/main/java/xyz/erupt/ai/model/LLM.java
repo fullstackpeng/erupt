@@ -2,6 +2,7 @@ package xyz.erupt.ai.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
 import xyz.erupt.ai.core.LlmConfig;
 import xyz.erupt.ai.core.LlmCore;
@@ -25,6 +26,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
+
+import java.sql.Types;
 
 /**
  * @author YuePeng
@@ -116,7 +119,7 @@ public class LLM extends MetaModelUpdateVo {
     private Integer sort = 0;
 
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
+    @JdbcTypeCode(Types.LONGVARCHAR)
     @EruptField(
             views = @View(title = "模型配置"),
             edit = @Edit(title = "模型配置", type = EditType.CODE_EDITOR, notNull = true,
