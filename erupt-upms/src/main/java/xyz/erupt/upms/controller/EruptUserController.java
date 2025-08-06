@@ -4,10 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wf.captcha.SpecCaptcha;
 import com.wf.captcha.base.Captcha;
 import lombok.SneakyThrows;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.erupt.core.annotation.EruptRouter;
 import xyz.erupt.core.constant.EruptRestPath;
 import xyz.erupt.core.i18n.I18nTranslate;
@@ -17,6 +14,7 @@ import xyz.erupt.core.util.SecretUtil;
 import xyz.erupt.core.view.EruptApiModel;
 import xyz.erupt.upms.base.LoginModel;
 import xyz.erupt.upms.constant.SessionKey;
+import xyz.erupt.upms.dto.LoginDto;
 import xyz.erupt.upms.fun.LoginProxy;
 import xyz.erupt.upms.model.EruptRole;
 import xyz.erupt.upms.model.EruptUser;
@@ -88,6 +86,51 @@ public class EruptUserController {
             loginModel = new LoginModel();
             try {
                 EruptUser eruptUser = loginProxy.login(account, pwd);
+                if (null == eruptUser) {
+                    loginModel.setReason("账号或密码错误");
+                    loginModel.setPass(false);
+                } else {
+                    loginModel.setEruptUser(eruptUser);
+                    loginModel.setPass(true);
+                }
+            } catch (Exception e) {
+                if (0 == eruptAppProp.getVerifyCodeCount()) loginModel.setUseVerifyCode(true);
+                loginModel.setReason(e.getMessage());
+                loginModel.setPass(false);
+            }
+        }
+        if (loginModel.isPass()) {
+            EruptUser eruptUser = loginModel.getEruptUser();
+            loginModel.setToken(Erupts.generateCode(16));
+            loginModel.setExpire(LocalDateTime.now().plusMinutes(eruptUpmsProp.getExpireTimeByLogin()));
+            loginModel.setResetPwd(null == eruptUser.getResetPwdTime());
+            if (null != loginProxy) loginProxy.loginSuccess(eruptUser, loginModel.getToken());
+            eruptTokenService.loginToken(eruptUser, loginModel.getToken());
+            eruptUserService.saveLoginLog(eruptUser, loginModel.getToken()); //记录登录日志
+        }
+        return loginModel;
+    }
+
+
+    /**
+     * 登录
+     *
+     */
+    @SneakyThrows
+    @PostMapping(value = "/v1/login")
+    public LoginModel loginV1(@RequestBody LoginDto loginDto
+    ) {
+        if (!eruptUserService.checkVerifyCode(loginDto.getAccount(), loginDto.getVerifyCode(), loginDto.getVerifyCodeMark())) {
+            return new LoginModel(false, "验证码错误", true);
+        }
+        LoginProxy loginProxy = EruptUserService.findEruptLogin();
+        LoginModel loginModel;
+        if (null == loginProxy) {
+            loginModel = eruptUserService.login(loginDto.getAccount(), loginDto.getPwd());
+        } else {
+            loginModel = new LoginModel();
+            try {
+                EruptUser eruptUser = loginProxy.login(loginDto.getAccount(), loginDto.getPwd());
                 if (null == eruptUser) {
                     loginModel.setReason("账号或密码错误");
                     loginModel.setPass(false);
